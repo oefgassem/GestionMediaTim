@@ -1,2 +1,1 @@
-# bootstrap_admin
-Django Bootstrap Free Admin Theme
+Projet CBD ETM Ibn Rochd ING21 DLW
