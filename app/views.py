@@ -1,7 +1,9 @@
+from http.client import HTTPResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import ObjectDoesNotExist
+from app.models import Adherent
 
 
 def index(request):
@@ -9,6 +11,21 @@ def index(request):
         return redirect("/login.html")
     return html(request, "index")
 
+
+
+def adherent_table(request):
+    adherents = Adherent.objects.all()
+    context= {
+            "adherents":adherents
+    }
+    return render(request, "adherent_table.html", context=context)
+
+def adherent_detail(request, pk):
+    adhde = Adherent.objects.get(id=pk)
+    context = {
+        "adherent":adhde
+    }
+    return render(request, "adherent_detail.html", context=context)
 
 def html(request, filename):
     context = {"filename": filename,
@@ -38,11 +55,10 @@ def html(request, filename):
         print("login")
         print(username, password)
     print(filename, request.method)
-    if filename in ["buttons", "cards"]:
-        context["collapse"] = "components"
-    if filename in ["utilities-color", "utilities-border", "utilities-animation", "utilities-other"]:
-        context["collapse"] = "utilities"
-    if filename in ["404", "blank"]:
-        context["collapse"] = "pages"
-
+    if filename == "adherent_table":
+        adherents = Adherent.objects.all()
+        context= {
+            "adherents":adherents
+        }
     return render(request, f"{filename}.html", context=context)
+

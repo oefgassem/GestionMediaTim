@@ -18,9 +18,12 @@ from django.urls import path
 from bootstrap import settings
 from django.conf.urls.static import static
 from app import views
+from app.views import adherent_detail, adherent_table
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
+    path('adherent/', adherent_table),
+    path('adherent/<pk>/', adherent_detail),
     path('admin/', admin.site.urls),
     path('<filename>.html', views.html),
     path('', views.index),
