@@ -1,9 +1,16 @@
 from http.client import HTTPResponse
+from mmap import PAGESIZE
+from typing import IO
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import ObjectDoesNotExist
 from app.models import Adherent
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import A4
 
 
 def index(request):
@@ -11,7 +18,26 @@ def index(request):
         return redirect("/login.html")
     return html(request, "index")
 
+def adherent_detail_pdf(requet, pk):
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=A4, bottomup=0)
+    textob = c.beginText()
+    textob.setTextOrigin(inch, inch)
+    textob.setFont("Helvetica", 14)
+    adherent = Adherent.objects.get(id=pk)
+    lines = []
+    
+    lines.append(adherent.codeadh)
+    lines.append(adherent.nomadh)
+    lines.append(adherent.prenomadh)
 
+    for line in lines:
+        textob.textLine(line)
+    c.drawText(textob)
+    c.showPage()
+    c.save()
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename='adherent.pdf')
 
 def adherent_table(request):
     adherents = Adherent.objects.all()
