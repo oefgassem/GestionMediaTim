@@ -23,10 +23,10 @@ def adherent_detail_pdf(requet, pk):
     c = canvas.Canvas(buf, pagesize=A4, bottomup=0)
     textob = c.beginText()
     textob.setTextOrigin(inch, inch)
-    textob.setFont("Helvetica", 14)
+    textob.setFont("Helvetica", 15)
     adherent = Adherent.objects.get(id=pk)
     lines = []
-    
+
     lines.append(adherent.codeadh)
     lines.append(adherent.nomadh)
     lines.append(adherent.prenomadh)
